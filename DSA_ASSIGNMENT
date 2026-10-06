@@ -1,0 +1,254 @@
+/*
+========================================================
+DSA ASSIGNMENT - STRUCTURES & ALGORITHMS
+Q1. Stack using Array
+Q2. Circular Queue using Array
+========================================================
+
+This single C file contains both assignment programs.
+Select Q1 or Q2 from the main menu.
+*/
+
+#include <stdio.h>
+
+#define MAX 5
+
+/* ===================== Q1: STACK ===================== */
+
+int stack[MAX];
+int top = -1;
+
+void push(int x) {
+    if (top == MAX - 1) {
+        printf("Stack Overflow! Cannot push %d.\n", x);
+        return;
+    }
+    stack[++top] = x;
+    printf("%d pushed into the stack.\n", x);
+}
+
+void popStack() {
+    if (top == -1) {
+        printf("Stack Underflow! Stack is empty.\n");
+        return;
+    }
+    printf("%d popped from the stack.\n", stack[top--]);
+}
+
+void peekStack() {
+    if (top == -1) {
+        printf("Stack is empty.\n");
+        return;
+    }
+    printf("Top element: %d\n", stack[top]);
+}
+
+void displayStack() {
+    if (top == -1) {
+        printf("Stack is empty.\n");
+        return;
+    }
+
+    printf("Stack elements (top to bottom): ");
+    for (int i = top; i >= 0; i--)
+        printf("%d ", stack[i]);
+    printf("\n");
+}
+
+void stackProgram() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- STACK USING ARRAY ---\n");
+        printf("1. PUSH\n2. POP\n3. PEEK\n4. DISPLAY\n5. BACK\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                push(value);
+                break;
+            case 2:
+                popStack();
+                break;
+            case 3:
+                peekStack();
+                break;
+            case 4:
+                displayStack();
+                break;
+            case 5:
+                return;
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+}
+
+/*
+Q1 Complexity:
+PUSH    : O(1) time, O(1) extra space
+POP     : O(1) time, O(1) extra space
+PEEK    : O(1) time, O(1) extra space
+DISPLAY : O(n) time, O(1) extra space
+
+Stack Overflow occurs when a fixed-size stack is full and
+the user tries to insert another element.
+Stack Underflow occurs when POP/PEEK is attempted on an
+empty stack.
+*/
+
+/* ================= Q2: CIRCULAR QUEUE ================= */
+
+int queue[MAX];
+int front = -1;
+int rear = -1;
+
+int isEmpty() {
+    return front == -1;
+}
+
+int isFull() {
+    return (rear + 1) % MAX == front;
+}
+
+void enqueue(int x) {
+    if (isFull()) {
+        printf("Queue Overflow! Queue is full.\n");
+        return;
+    }
+
+    if (isEmpty())
+        front = rear = 0;
+    else
+        rear = (rear + 1) % MAX;
+
+    queue[rear] = x;
+    printf("%d inserted into the circular queue.\n", x);
+}
+
+void dequeueQueue() {
+    if (isEmpty()) {
+        printf("Queue Underflow! Queue is empty.\n");
+        return;
+    }
+
+    printf("%d deleted from the circular queue.\n", queue[front]);
+
+    if (front == rear)
+        front = rear = -1;
+    else
+        front = (front + 1) % MAX;
+}
+
+void frontQueue() {
+    if (isEmpty()) {
+        printf("Queue is empty.\n");
+        return;
+    }
+    printf("Front element: %d\n", queue[front]);
+}
+
+void displayQueue() {
+    if (isEmpty()) {
+        printf("Queue is empty.\n");
+        return;
+    }
+
+    printf("Circular Queue elements: ");
+
+    int i = front;
+    while (1) {
+        printf("%d ", queue[i]);
+
+        if (i == rear)
+            break;
+
+        i = (i + 1) % MAX;
+    }
+
+    printf("\n");
+}
+
+void queueProgram() {
+    int choice, value;
+
+    while (1) {
+        printf("\n--- CIRCULAR QUEUE USING ARRAY ---\n");
+        printf("1. ENQUEUE\n2. DEQUEUE\n3. FRONT\n4. DISPLAY\n5. BACK\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+            case 2:
+                dequeueQueue();
+                break;
+            case 3:
+                frontQueue();
+                break;
+            case 4:
+                displayQueue();
+                break;
+            case 5:
+                return;
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+}
+
+/*
+Q2 Complexity:
+ENQUEUE : O(1) time
+DEQUEUE : O(1) time
+FRONT   : O(1) time
+DISPLAY : O(n) time
+
+Space Complexity: O(n)
+
+A circular queue provides better memory utilization because
+it reuses positions freed at the beginning of the array.
+
+In a simple linear queue, when REAR reaches the last index,
+unused positions at the beginning may remain unavailable.
+This causes false overflow. A circular queue avoids this
+problem by wrapping REAR around to the beginning.
+*/
+
+/* ===================== MAIN ===================== */
+
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\n====================================\n");
+        printf("       DSA ASSIGNMENT MENU\n");
+        printf("====================================\n");
+        printf("1. Stack using Array (Q1)\n");
+        printf("2. Circular Queue using Array (Q2)\n");
+        printf("3. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                stackProgram();
+                break;
+            case 2:
+                queueProgram();
+                break;
+            case 3:
+                printf("Program ended.\n");
+                return 0;
+            default:
+                printf("Invalid choice.\n");
+        }
+    }
+}
